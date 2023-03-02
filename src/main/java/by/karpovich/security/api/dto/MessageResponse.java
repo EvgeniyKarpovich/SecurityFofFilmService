@@ -1,4 +1,4 @@
-package by.karpovich.security.dto;
+package by.karpovich.security.api.dto;
 
 public class MessageResponse {
     private String message;

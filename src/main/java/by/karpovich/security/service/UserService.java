@@ -1,22 +1,28 @@
 package by.karpovich.security.service;
 
-import by.karpovich.security.dto.RegistrationForm;
+import by.karpovich.security.api.dto.*;
 import by.karpovich.security.exception.DuplicateException;
 import by.karpovich.security.exception.NotFoundModelException;
-import by.karpovich.security.jpa.model.Role;
 import by.karpovich.security.jpa.model.Status;
 import by.karpovich.security.jpa.model.User;
 import by.karpovich.security.jpa.repository.RoleRepository;
 import by.karpovich.security.jpa.repository.UserRepository;
+import by.karpovich.security.mapping.UserMapper;
+import by.karpovich.security.security.JwtUtils;
+import by.karpovich.security.security.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,42 +35,90 @@ public class UserService {
     private RoleRepository roleRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtUtils jwtUtils;
+    @Autowired
+    private UserMapper userMapper;
 
     private static final String ROLE_USER = "ROLE_USER";
 
-    public void saveUser(RegistrationForm dto) {
+    public void signUp(RegistrationForm dto) {
         validateAlreadyExists(dto, null);
         User model = new User();
 
         model.setUsername(dto.getUsername());
         model.setPassword(passwordEncoder.encode(dto.getPassword()));
         model.setEmail(dto.getEmail());
-        model.setRoles(findRoleByName(ROLE_USER));
+        model.setRoles(roleService.findRoleByName(ROLE_USER));
         model.setStatus(Status.ACTIVE);
 
         userRepository.save(model);
-
     }
 
-    private Set<Role> findRoleByName(String role) {
-        Optional<Role> entity = roleRepository.findByName(role);
+    public JwtResponse signIn(LoginForm loginForm) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
 
-        Role roleEntity = entity.orElseThrow(
-                () -> new NotFoundModelException(String.format("the role with name = %s not found", role)));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-        Set<Role> userRoles = new HashSet<>();
-        userRoles.add(roleEntity);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
 
-        return userRoles;
+        return new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                roles);
     }
 
-    public void deleteUserById(Long id) {
+    public UserFullDtoOut findById(Long id) {
+        Optional<User> model = userRepository.findById(id);
+        User user = model.orElseThrow(
+                () -> new NotFoundModelException(String.format("the country with id = %s not found", model.get().getId())));
+
+        log.info("method findById - the model found with id = {} ", user.getId());
+
+        return userMapper.mapUserFullDtoFromModel(user);
+    }
+
+
+    public void deleteById(Long id) {
         if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
         }
-        throw new NotFoundModelException(String.format(" the actor with id = %s not found", id));
+        throw new NotFoundModelException(String.format("User with id = %s not found", id));
     }
 
+    public List<UserDtoForFindAll> findAll() {
+        List<User> usersModel = userRepository.findAll();
+
+        log.info("method findAll - the number of users found  = {} ", usersModel.size());
+
+        return userMapper.mapListUserDtoForFindAllFromListModel(usersModel);
+    }
+
+    public UserFullDtoOut update(Long id, UserForUpdate dto) {
+
+        Optional<User> userById = userRepository.findById(id);
+        User user = userById.orElseThrow(
+                () -> new NotFoundModelException(String.format("the country with id = %s not found", userById.get().getId())));
+
+        user.setId(id);
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        User updatedUser = userRepository.save(user);
+
+        log.info("method update - the role {} updated", updatedUser.getUsername());
+
+        return userMapper.mapUserFullDtoFromModel(updatedUser);
+    }
 
     public User findByName(String name) {
         Optional<User> userByName = userRepository.findByUsername(name);
@@ -82,7 +136,7 @@ public class UserService {
         Optional<User> model = userRepository.findByUsername(dto.getUsername());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the actor with name = %s already exist", model.get().getUsername()));
+            throw new DuplicateException(String.format("User with name = %s already exist", model.get().getUsername()));
         }
     }
 }

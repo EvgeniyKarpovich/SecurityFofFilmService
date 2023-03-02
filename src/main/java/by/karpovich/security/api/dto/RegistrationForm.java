@@ -1,4 +1,4 @@
-package by.karpovich.security.dto;
+package by.karpovich.security.api.dto;
 
 import by.karpovich.security.jpa.model.Status;
 import lombok.Data;
