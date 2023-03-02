@@ -1,4 +1,4 @@
-package by.karpovich.security.api.dto;
+package by.karpovich.security.api.dto.authentification;
 
 import by.karpovich.security.jpa.model.Status;
 import lombok.Data;

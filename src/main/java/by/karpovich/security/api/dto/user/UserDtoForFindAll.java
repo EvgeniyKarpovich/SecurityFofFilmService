@@ -1,4 +1,4 @@
-package by.karpovich.security.api.dto;
+package by.karpovich.security.api.dto.user;
 
 import by.karpovich.security.jpa.model.Status;
 import com.fasterxml.jackson.annotation.JsonProperty;

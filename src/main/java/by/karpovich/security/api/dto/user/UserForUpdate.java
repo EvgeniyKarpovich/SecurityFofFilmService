@@ -1,9 +1,9 @@
-package by.karpovich.security.api.dto;
+package by.karpovich.security.api.dto.user;
 
 import lombok.Data;
 
 @Data
-public class UserFullDtoOut {
+public class UserForUpdate {
 
     private String username;
 

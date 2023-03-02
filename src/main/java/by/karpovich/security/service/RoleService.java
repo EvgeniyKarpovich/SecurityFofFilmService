@@ -1,6 +1,6 @@
 package by.karpovich.security.service;
 
-import by.karpovich.security.api.dto.RoleDto;
+import by.karpovich.security.api.dto.role.RoleDto;
 import by.karpovich.security.exception.DuplicateException;
 import by.karpovich.security.exception.NotFoundModelException;
 import by.karpovich.security.jpa.model.Role;
@@ -35,7 +35,7 @@ public class RoleService {
         Optional<Role> entity = roleRepository.findByName(role);
 
         Role roleEntity = entity.orElseThrow(
-                () -> new NotFoundModelException(String.format("the role with name = %s not found", role)));
+                () -> new NotFoundModelException(String.format("Role with name = %s not found", role)));
 
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(roleEntity);
@@ -46,9 +46,9 @@ public class RoleService {
     public RoleDto findById(Long id) {
         Optional<Role> model = roleRepository.findById(id);
         Role role = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the country with id = %s not found", model.get().getId())));
+                () -> new NotFoundModelException(String.format("Role with id = %s not found", model.get().getId())));
 
-        log.info("method findById - the model found with id = {} ", role.getId());
+        log.info("method findById - Role found with id = {} ", role.getId());
 
         RoleDto dto = new RoleDto();
         dto.setId(role.getId());
@@ -82,7 +82,7 @@ public class RoleService {
         role.setId(id);
         Role updated = roleRepository.save(role);
 
-        log.info("method update - the role {} updated", updated.getName());
+        log.info("method update - Role {} updated", updated.getName());
 
         RoleDto roleDto = new RoleDto();
         roleDto.setId(updated.getId());
@@ -94,9 +94,9 @@ public class RoleService {
         if (roleRepository.findById(id).isPresent()) {
             roleRepository.deleteById(id);
         } else {
-            throw new NotFoundModelException(String.format(" the role with id = %s not found", id));
+            throw new NotFoundModelException(String.format("Role with id = %s not found", id));
         }
-        log.info("method deleteById - the role with id = {} deleted", id);
+        log.info("method deleteById - Role with id = {} deleted", id);
     }
 
 
@@ -104,7 +104,7 @@ public class RoleService {
         Optional<Role> model = roleRepository.findByName(dto.getName());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the actor with name = %s already exist", model.get().getName()));
+            throw new DuplicateException(String.format("Role with name = %s already exist", model.get().getName()));
         }
     }
 }

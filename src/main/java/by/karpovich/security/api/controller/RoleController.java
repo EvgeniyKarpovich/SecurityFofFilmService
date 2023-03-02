@@ -1,6 +1,6 @@
 package by.karpovich.security.api.controller;
 
-import by.karpovich.security.api.dto.RoleDto;
+import by.karpovich.security.api.dto.role.RoleDto;
 import by.karpovich.security.jpa.model.Role;
 import by.karpovich.security.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

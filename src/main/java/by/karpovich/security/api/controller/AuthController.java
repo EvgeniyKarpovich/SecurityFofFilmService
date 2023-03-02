@@ -1,9 +1,9 @@
 package by.karpovich.security.api.controller;
 
-import by.karpovich.security.api.dto.JwtResponse;
-import by.karpovich.security.api.dto.LoginForm;
-import by.karpovich.security.api.dto.MessageResponse;
-import by.karpovich.security.api.dto.RegistrationForm;
+import by.karpovich.security.api.dto.authentification.JwtResponse;
+import by.karpovich.security.api.dto.authentification.LoginForm;
+import by.karpovich.security.api.dto.authentification.MessageResponse;
+import by.karpovich.security.api.dto.authentification.RegistrationForm;
 import by.karpovich.security.jpa.repository.UserRepository;
 import by.karpovich.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

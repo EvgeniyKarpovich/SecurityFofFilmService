@@ -1,4 +1,4 @@
-package by.karpovich.security.api.dto;
+package by.karpovich.security.api.dto.role;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -1,6 +1,11 @@
 package by.karpovich.security.service;
 
-import by.karpovich.security.api.dto.*;
+import by.karpovich.security.api.dto.authentification.JwtResponse;
+import by.karpovich.security.api.dto.authentification.LoginForm;
+import by.karpovich.security.api.dto.authentification.RegistrationForm;
+import by.karpovich.security.api.dto.user.UserDtoForFindAll;
+import by.karpovich.security.api.dto.user.UserForUpdate;
+import by.karpovich.security.api.dto.user.UserFullDtoOut;
 import by.karpovich.security.exception.DuplicateException;
 import by.karpovich.security.exception.NotFoundModelException;
 import by.karpovich.security.jpa.model.Status;
@@ -81,9 +86,9 @@ public class UserService {
     public UserFullDtoOut findById(Long id) {
         Optional<User> model = userRepository.findById(id);
         User user = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the country with id = %s not found", model.get().getId())));
+                () -> new NotFoundModelException(String.format("User with id = %s not found", model.get().getId())));
 
-        log.info("method findById - the model found with id = {} ", user.getId());
+        log.info("method findById - the user found with id = {} ", user.getId());
 
         return userMapper.mapUserFullDtoFromModel(user);
     }
@@ -99,7 +104,7 @@ public class UserService {
     public List<UserDtoForFindAll> findAll() {
         List<User> usersModel = userRepository.findAll();
 
-        log.info("method findAll - the number of users found  = {} ", usersModel.size());
+        log.info("method findAll - number of users found  = {} ", usersModel.size());
 
         return userMapper.mapListUserDtoForFindAllFromListModel(usersModel);
     }
@@ -115,7 +120,7 @@ public class UserService {
         user.setEmail(dto.getEmail());
         User updatedUser = userRepository.save(user);
 
-        log.info("method update - the role {} updated", updatedUser.getUsername());
+        log.info("method update - the user {} updated", updatedUser.getUsername());
 
         return userMapper.mapUserFullDtoFromModel(updatedUser);
     }

@@ -1,7 +1,7 @@
 package by.karpovich.security.mapping;
 
-import by.karpovich.security.api.dto.UserDtoForFindAll;
-import by.karpovich.security.api.dto.UserFullDtoOut;
+import by.karpovich.security.api.dto.user.UserDtoForFindAll;
+import by.karpovich.security.api.dto.user.UserFullDtoOut;
 import by.karpovich.security.jpa.model.Role;
 import by.karpovich.security.jpa.model.User;
 import org.springframework.stereotype.Component;

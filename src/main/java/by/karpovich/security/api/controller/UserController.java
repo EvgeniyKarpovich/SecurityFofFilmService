@@ -1,8 +1,8 @@
 package by.karpovich.security.api.controller;
 
-import by.karpovich.security.api.dto.UserDtoForFindAll;
-import by.karpovich.security.api.dto.UserForUpdate;
-import by.karpovich.security.api.dto.UserFullDtoOut;
+import by.karpovich.security.api.dto.user.UserDtoForFindAll;
+import by.karpovich.security.api.dto.user.UserForUpdate;
+import by.karpovich.security.api.dto.user.UserFullDtoOut;
 import by.karpovich.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
