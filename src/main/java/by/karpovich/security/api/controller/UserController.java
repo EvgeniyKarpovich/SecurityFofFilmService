@@ -4,6 +4,7 @@ import by.karpovich.security.api.dto.user.UserDtoForFindAll;
 import by.karpovich.security.api.dto.user.UserForUpdate;
 import by.karpovich.security.api.dto.user.UserFullDtoOut;
 import by.karpovich.security.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +30,16 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody UserForUpdate dto,
+    public ResponseEntity<?> update(@Valid @RequestBody UserForUpdate dto,
                                     @PathVariable("id") Long id) {
         userService.update(id, dto);
         return new ResponseEntity<>("User successfully updated", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         userService.deleteById(id);
+
+        return new ResponseEntity<>("User successfully updated", HttpStatus.OK);
     }
 }

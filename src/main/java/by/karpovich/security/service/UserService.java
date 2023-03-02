@@ -72,15 +72,20 @@ public class UserService {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles);
+        JwtResponse jwtResponse = new JwtResponse();
+        jwtResponse.setId(userDetails.getId());
+        jwtResponse.setUsername(userDetails.getUsername());
+        jwtResponse.setEmail(userDetails.getEmail());
+        jwtResponse.setRoles(roles);
+        jwtResponse.setType("Bearer");
+        jwtResponse.setToken(jwt);
+
+        return jwtResponse;
     }
 
     public UserFullDtoOut findById(Long id) {
@@ -92,7 +97,6 @@ public class UserService {
 
         return userMapper.mapUserFullDtoFromModel(user);
     }
-
 
     public void deleteById(Long id) {
         if (userRepository.findById(id).isPresent()) {
