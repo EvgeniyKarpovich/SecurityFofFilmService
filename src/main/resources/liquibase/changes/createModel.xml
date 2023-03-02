@@ -5,15 +5,15 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-<!--    <changeSet id="model_role-1" author="karpovich.e">-->
-<!--        <sql>-->
-<!--            INSERT INTO ROLES (name)-->
-<!--            VALUES-->
-<!--            ('ROLE_USER'),-->
-<!--            ('ROLE_MODERATOR'),-->
-<!--            ('ROLE_ADMIN');-->
-<!--        </sql>-->
-<!--    </changeSet>-->
+    <changeSet id="model_role-1" author="karpovich.e">
+        <sql>
+            INSERT INTO ROLES (name)
+            VALUES
+            ('ROLE_USER'),
+            ('ROLE_MODERATOR'),
+            ('ROLE_ADMIN');
+        </sql>
+    </changeSet>
 
     <changeSet id="model-users-1" author="karpovich.e">
         <sql>
@@ -29,7 +29,7 @@
             INSERT INTO USER_ROLES (user_id, role_id)
             VALUES ('1', '1'),
             ('2', '2'),
-            ('3', '2')
+            ('3', '3')
         </sql>
     </changeSet>
 
