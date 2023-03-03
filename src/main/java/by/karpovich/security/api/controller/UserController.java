@@ -40,6 +40,6 @@ public class UserController {
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         userService.deleteById(id);
 
-        return new ResponseEntity<>("User successfully updated", HttpStatus.OK);
+        return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
 package by.karpovich.security.api.dto.user;
 
-import by.karpovich.security.api.dto.validation.UsernameValidation.ValidUsername;
+import by.karpovich.security.api.dto.validation.usernameValidation.ValidUsername;
 import by.karpovich.security.api.dto.validation.emailValidator.ValidEmail;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package by.karpovich.security.api.dto.validation.UsernameValidation;
+package by.karpovich.security.api.dto.validation.usernameValidation;
 
 import by.karpovich.security.jpa.model.User;
 import by.karpovich.security.jpa.repository.UserRepository;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-public class UsernameValidator implements ConstraintValidator<ValidUsername, String> {
+public class UsernameValidatorForLogin implements ConstraintValidator<ValidUsernameForLogin, String> {
 
     @Autowired
     private UserRepository userRepository;
@@ -19,6 +19,6 @@ public class UsernameValidator implements ConstraintValidator<ValidUsername, Str
             return false;
         }
         Optional<User> model = userRepository.findByUsername(username);
-        return !model.isPresent();
+        return model.isPresent();
     }
 }

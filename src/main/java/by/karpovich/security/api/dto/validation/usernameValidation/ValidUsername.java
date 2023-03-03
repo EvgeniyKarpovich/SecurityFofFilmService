@@ -1,4 +1,4 @@
-package by.karpovich.security.api.dto.validation.UsernameValidation;
+package by.karpovich.security.api.dto.validation.usernameValidation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -8,12 +8,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = UsernameValidatorForLogin.class)
+@Constraint(validatedBy = UsernameValidator.class)
 @Target({ElementType.FIELD, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidUsernameForLogin {
+public @interface ValidUsername {
 
-    String message() default "Wrong login or Password";
+    String message() default "Name already exist!";
 
     Class<?>[] groups() default {};
 
