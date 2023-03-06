@@ -11,7 +11,6 @@ import by.karpovich.security.exception.NotFoundModelException;
 import by.karpovich.security.jpa.model.RefreshToken;
 import by.karpovich.security.jpa.model.Status;
 import by.karpovich.security.jpa.model.User;
-import by.karpovich.security.jpa.repository.RoleRepository;
 import by.karpovich.security.jpa.repository.UserRepository;
 import by.karpovich.security.mapping.UserMapper;
 import by.karpovich.security.security.JwtUtils;
@@ -37,8 +36,6 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
@@ -68,14 +65,17 @@ public class UserService {
     }
 
     public JwtResponse signIn(LoginForm loginForm) {
+        String username = loginForm.getUsername();
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
+
+        User userByName = findByName(username);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        String jwt = jwtUtils.generateJwtToken(userDetails);
+        String jwt = jwtUtils.generateToken(userByName.getUsername());
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())

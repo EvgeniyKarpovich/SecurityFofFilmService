@@ -49,7 +49,7 @@ public class AuthController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+                    String token = jwtUtils.generateToken(user.getUsername());
 
                     TokenRefreshResponse tokenRefreshResponse = new TokenRefreshResponse();
                     tokenRefreshResponse.setAccessToken(token);

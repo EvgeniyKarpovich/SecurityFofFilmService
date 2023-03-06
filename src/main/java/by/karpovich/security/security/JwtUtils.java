@@ -4,7 +4,6 @@ import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -18,12 +17,7 @@ public class JwtUtils {
     @Value("${jwt.token.expired}")
     private int jwtExpirationMs;
 
-
-    public String generateJwtToken(UserDetailsImpl userPrincipal) {
-        return generateTokenFromUsername(userPrincipal.getUsername());
-    }
-
-    public String generateTokenFromUsername(String username) {
+    public String generateToken(String username) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + jwtExpirationMs);
 
