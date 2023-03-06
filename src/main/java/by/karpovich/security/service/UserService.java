@@ -8,6 +8,7 @@ import by.karpovich.security.api.dto.user.UserForUpdate;
 import by.karpovich.security.api.dto.user.UserFullDtoOut;
 import by.karpovich.security.exception.DuplicateException;
 import by.karpovich.security.exception.NotFoundModelException;
+import by.karpovich.security.jpa.model.RefreshToken;
 import by.karpovich.security.jpa.model.Status;
 import by.karpovich.security.jpa.model.User;
 import by.karpovich.security.jpa.repository.RoleRepository;
@@ -45,6 +46,8 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
+    private RefreshTokenService refreshTokenService;
+    @Autowired
     private JwtUtils jwtUtils;
     @Autowired
     private UserMapper userMapper;
@@ -69,13 +72,16 @@ public class UserService {
                 new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String jwt = jwtUtils.generateJwtToken(userDetails);
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
         JwtResponse jwtResponse = new JwtResponse();
         jwtResponse.setId(userDetails.getId());
@@ -84,6 +90,7 @@ public class UserService {
         jwtResponse.setRoles(roles);
         jwtResponse.setType("Bearer");
         jwtResponse.setToken(jwt);
+        jwtResponse.setRefreshToken(refreshToken.getToken());
 
         return jwtResponse;
     }

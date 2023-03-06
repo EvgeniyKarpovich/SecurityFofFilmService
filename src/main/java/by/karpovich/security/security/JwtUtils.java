@@ -18,14 +18,17 @@ public class JwtUtils {
     @Value("${jwt.token.expired}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
+    public String generateJwtToken(UserDetailsImpl userPrincipal) {
+        return generateTokenFromUsername(userPrincipal.getUsername());
+    }
+
+    public String generateTokenFromUsername(String username) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

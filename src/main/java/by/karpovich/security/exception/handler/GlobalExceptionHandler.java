@@ -2,6 +2,7 @@ package by.karpovich.security.exception.handler;
 
 import by.karpovich.security.exception.DuplicateException;
 import by.karpovich.security.exception.NotFoundModelException;
+import by.karpovich.security.exception.TokenRefreshException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,13 @@ public class GlobalExceptionHandler {
         ResponseBody exceptionResponse = new ResponseBody(
                 Collections.singletonList(e.getMessage()), HttpStatus.NOT_FOUND, Instant.now());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    public ResponseEntity<ResponseBody> handlerMethodArgumentNotValidException(TokenRefreshException e) {
+        ResponseBody exceptionResponse = new ResponseBody(
+                Collections.singletonList(e.getMessage()), HttpStatus.FORBIDDEN, Instant.now());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
     @SuppressWarnings("unchecked")
